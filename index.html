@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine's Day! 💖</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #232121;
+            --cat-red: #d34549;
+            --cat-pink: #ff8da1;
+            --heart-red: #ff003c;
+            --accent-cyan: #4cc9f0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: 'Press Start 2P', cursive;
+            overflow: hidden;
+            color: var(--cat-pink);
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
+            background-size: 100% 4px;
+            z-index: 100;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .crt-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 60%, rgba(0, 0, 0, 0.4) 100%);
+            pointer-events: none;
+            z-index: 101;
+        }
+
+        .retro-window {
+            background: #2d2a2a;
+            border: 4px solid #4a4545;
+            box-shadow: 10px 10px 0px #1a1818;
+            position: relative;
+            z-index: 10;
+        }
+
+        .retro-header {
+            background: #4a4545;
+            color: #ff8da1;
+            padding: 6px 10px;
+            font-size: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Pixel Cat Styling */
+        .cat-display {
+            width: 280px;
+            height: 280px;
+            position: relative;
+            background: #232121;
+            border: 4px solid #4a4545;
+            overflow: hidden;
+        }
+
+        .eye-container {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: #3d1c1c;
+            border-radius: 20%;
+            border: 4px solid #1a0a0a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            top: 100px;
+        }
+
+        .eye-left { left: 30px; }
+        .eye-right { right: 30px; }
+
+        .heart-pupil {
+            color: var(--heart-red);
+            font-size: 30px;
+            animation: heart-throb 1.5s infinite ease-in-out;
+            text-shadow: 0 0 10px var(--heart-red);
+        }
+
+        .cyan-glint {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 12px;
+            height: 8px;
+            background: var(--accent-cyan);
+            border-radius: 2px;
+            box-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        @keyframes heart-throb {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .flower-giving {
+            position: absolute;
+            bottom: -150px; /* Adjust start position for larger size */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px; /* Set specific size for the GIF container */
+            height: 150px;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            z-index: 20;
+        }
+
+        .flower-giving.show {
+            bottom: -10px; /* Moves up to this position, lower than before */
+        }
+
+        @keyframes flower-float {
+            0%, 100% { transform: translateX(-50%) scale(1) rotate(0deg); }
+            50% { transform: translateX(-50%) scale(1.1) translateY(-15px) rotate(10deg); }
+        }
+
+        .floating-item {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            animation: flower-rain-item linear forwards;
+            --drift-x: 0px; /* Custom property for horizontal drift */
+        }
+
+        @keyframes flower-rain-item {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+        }
+
+        .btn-retro {
+            background: #4a4545;
+            border: 2px solid #ff8da1;
+            color: #ff8da1;
+            padding: 12px 24px;
+            font-size: 14px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .btn-retro:hover {
+            background: #ff8da1;
+            color: #232121;
+            box-shadow: 0 0 20px #ff8da1;
+        }
+
+        .pixel-text {
+            text-shadow: 2px 2px 0px #000;
+        }
+
+        .floating-heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            animation: float-up linear forwards;
+        }
+
+        @keyframes float-up {
+            to { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="scanlines"></div>
+    <div class="crt-glow"></div>
+
+    <!-- Splash Screen -->
+    <div id="splash" class="fixed inset-0 bg-[#232121] z-[200] flex flex-col items-center justify-center gap-6">
+        <div id="name-input-container" class="hidden flex flex-col items-center gap-4">
+            <label class="text-[10px] text-pink-300">WHO IS OPENING THIS?</label>
+            <input type="text" id="user-name" placeholder="TYPE NAME..." 
+                class="bg-black border-2 border-pink-500 text-pink-300 p-3 text-center outline-none focus:shadow-[0_0_15px_#ff8da1] font-['Press_Start_2P'] text-[12px]">
+        </div>
+        <button class="btn-retro text-2xl animate-pulse" onclick="startApp()">CLICK ME</button>
+    </div>
+
+    <div id="main-content" class="hidden opacity-0 transition-opacity duration-1000">
+        <div class="retro-window w-[350px]">
+            <div class="retro-header">
+                <span>VALENTINE_OS_V1.0</span>
+                <div class="flex gap-2">
+                    <span>_</span>
+                    <span>X</span>
+                </div>
+            </div>
+
+            <div class="p-4 flex flex-col items-center gap-4">
+                <h1 id="greeting" class="text-sm pixel-text text-center leading-relaxed">
+                    HAPPY<br>VALENTINE'S!
+                </h1>
+
+                <div class="cat-display" id="main-scene">
+                    <img src="cat_love.gif" alt="Pixel Cat" class="w-full h-full object-cover">
+                    <div class="flower-giving" id="rose"><img src="flowers-glitter.gif" alt="Glitter Flower"></div>
+                </div>
+
+                <div id="status-text" class="text-[8px] text-gray-400 h-4 mt-2">
+                    SYSTEM IDLE...
+                </div>
+                
+                <!-- Keeping the button inside too so they can trigger it again -->
+                <div class="flex flex-col gap-3 w-full mt-4">
+                    <button class="btn-retro" onclick="giveFlower()">GIVE MORE LOVE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlName = urlParams.get('name');
+        
+        // Show input if no name in URL
+        if (!urlName) {
+            document.getElementById('name-input-container').classList.remove('hidden');
+        }
+
+        function startApp() {
+            const splash = document.getElementById('splash');
+            const main = document.getElementById('main-content');
+            const greeting = document.getElementById('greeting');
+            const inputName = document.getElementById('user-name').value;
+            
+            const finalName = urlName || inputName;
+            
+            if (finalName) {
+                greeting.innerHTML = `HAPPY VALENTINE'S<br>${finalName.toUpperCase()}!`;
+            }
+
+            splash.style.display = 'none';
+            main.classList.remove('hidden');
+            setTimeout(() => {
+                main.classList.add('opacity-100');
+                document.getElementById('status-text').innerText = "AWAITING INPUT..."; // Set initial status
+            }, 10);
+        }
+
+        function spawnGlitterFlower() {
+            const item = document.createElement('img');
+            item.src = 'flowers-glitter.gif';
+            item.className = 'floating-item';
+            const size = Math.random() * 70 + 30;
+            item.style.width = size + 'px';
+            item.style.height = 'auto';
+            
+            item.style.left = (Math.random() * 120 - 10) + 'vw'; // Spawn slightly outside viewport edges for full coverage
+
+            item.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            document.body.appendChild(item);
+            setTimeout(() => item.remove(), 10000);
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.innerHTML = '❤';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '110vh';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            heart.style.color = Math.random() > 0.5 ? '#ff003c' : '#ff8da1';
+            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            heart.style.opacity = Math.random();
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 6000);
+        }
+
+        // Only hearts are continuous now
+        setInterval(createHeart, 300);
+
+        let clickCount = 0;
+        let lastClickTime = 0;
+        let statusTimeoutId = null;
+
+        function resetStatus() {
+            const statusElement = document.getElementById('status-text');
+            statusElement.innerText = "AWAITING INPUT...";
+            statusElement.classList.remove('text-sm', 'font-bold', 'text-pink-300'); // Updated class removal
+            statusTimeoutId = null;
+        }
+
+        function giveFlower() {
+            const statusElement = document.getElementById('status-text');
+            const currentTime = Date.now();
+
+            if (statusTimeoutId) {
+                clearTimeout(statusTimeoutId);
+            }
+
+            // Determine if spamming
+            if (currentTime - lastClickTime < 400) { // Clicks within 400ms count as spam
+                clickCount++;
+            } else {
+                clickCount = 1; // Reset if clicks are too slow
+            }
+            lastClickTime = currentTime;
+
+            // Update status text and style
+            if (clickCount >= 3) { // If spammed 3 or more times rapidly
+                statusElement.innerText = "MAXIMUM LOVE DETECTED!";
+                statusElement.classList.add('text-sm', 'font-bold', 'text-pink-300'); // Add classes for bigger, bold, pink text
+                // Do NOT set timeout to reset status if spammed, it stays
+            } else { // Single click
+                statusElement.innerText = "GIVING MORE LOVE";
+                statusElement.classList.remove('text-lg', 'font-bold', 'text-pink-300');
+                statusTimeoutId = setTimeout(() => { resetStatus(); }, 3000); // Revert after 3 seconds
+            }
+
+            // Trigger a one-time burst of flowers
+            for(let i=0; i<50; i++) {
+                setTimeout(() => {
+                    spawnGlitterFlower();
+                }, Math.random() * 2000); // Spawn over 2 seconds
+            }
+        }
+    </script>
+    <style>
+        /* Hide the large central flower since it is no longer used by the script */
+        #rose {
+            display: none;
+        }
+    </style>
